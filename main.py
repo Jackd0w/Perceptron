@@ -14,6 +14,7 @@ H_dim = 4
 
 epoch_count = 1
 
+
 weights_ItoH = np.random.uniform(-1, 1, (I_dim, H_dim))
 weights_HtoO = np.random.uniform(-1, 1, H_dim)
 
@@ -56,3 +57,22 @@ def train():
                     weights_ItoH[I_node, H_node] -= LR * gradient_ItoH
                     
                 weights_HtoO[H_node] -= LR * gradient_HtoO
+
+
+def check():
+    correct_classification_count = 0
+    for sample in range(validation_count):
+        for node in range(H_dim):
+            preActivation_H[node] = np.dot(validation_data[sample,:], weights_ItoH[:, node])
+            postActivation_H[node] = sigmoid(preActivation_H[node])
+                
+        preActivation_O = np.dot(postActivation_H, weights_HtoO)
+        postActivation_O = sigmoid(preActivation_O)
+            
+        if postActivation_O > 0.5:
+            output = 1
+        else:
+            output = 0     
+            
+        if output == validation_output[sample]:
+            correct_classification_count += 1
