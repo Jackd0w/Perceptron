@@ -76,3 +76,10 @@ def check():
             
         if output == validation_output[sample]:
             correct_classification_count += 1
+    print('Percentage of correct classifications:')
+    print(correct_classification_count*100/validation_count)
+
+
+if __name__ == '__main__':
+    train()
+    check()
