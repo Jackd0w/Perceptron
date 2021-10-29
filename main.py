@@ -31,3 +31,28 @@ validation_output = validation_data.output
 validation_data = validation_data.drop(['output'], axis=1)
 validation_data = np.asarray(validation_data)
 validation_count = len(validation_data[:,0])
+
+
+def train():
+    for epoch in range(epoch_count):
+        for sample in range(training_count):
+        for node in range(H_dim):
+            preActivation_H[node] = np.dot(training_data[sample,:], weights_ItoH[:, node])
+            postActivation_H[node] = sigmoid(preActivation_H[node])
+            
+        preActivation_O = np.dot(postActivation_H, weights_HtoO)
+        postActivation_O = sigmoid(preActivation_O)
+        
+        FE = postActivation_O - target_output[sample]
+        
+        for H_node in range(H_dim):
+            S_error = FE * sigmoid(preActivation_O)
+            gradient_HtoO = S_error * postActivation_H[H_node]
+                       
+            for I_node in range(I_dim):
+                input_value = training_data[sample, I_node]
+                gradient_ItoH = S_error * weights_HtoO[H_node] * sigmoid(preActivation_H[H_node]) * input_value
+                
+                weights_ItoH[I_node, H_node] -= LR * gradient_ItoH
+                
+            weights_HtoO[H_node] -= LR * gradient_HtoO
